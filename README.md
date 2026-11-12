@@ -1,30 +1,27 @@
 # Crypto Edu
 
-Simulateur éducatif de trading crypto avec prix live.
+Simulateur éducatif de trading crypto — **100 % statique**.
 
-**Site en ligne :** [https://cryptoedu-fr.netlify.app](https://cryptoedu-fr.netlify.app)
+## Stack
+- HTML / CSS / JS (un seul `index.html`)
+- Prix live : CoinGecko
+- Sauvegarde : **localStorage** (navigateur)
+- **Pas de Supabase**, pas de compte
 
 ## Fonctionnalités
-
-- Comptes utilisateur (Supabase)
-- Prix live (CoinGecko)
+- Capital de départ 50 € → 5000 €
+- 15 cryptos, prix live
 - Achat / vente manuels
-- Ordres programmés (achat si prix ≤, vente si prix ≥)
+- Ordres programmés (montants en **euros**)
+- Courbes : 1 jour, 7j, 30j, 90j, 1 an, depuis création
 - Stratégie éducative DCA + SMA 200
-- Courbes historiques avec cache anti rate-limit
-- 15 cryptomonnaies (BTC, ETH, SOL, XRP, BNB, DOGE, ADA, LINK, AVAX, DOT, MATIC, LTC, UNI, NEAR, ATOM)
 
-## Utilisation
+## GitHub Pages
+1. Dépose `index.html` à la racine de ce dépôt
+2. **Settings → Pages → Branch `main` → Save**
+3. URL : `https://Arthur943-code.github.io/cryptoedu-fr/`
 
-1. Ouvre le site ou `index.html` en local
-2. Crée un compte ou connecte-toi
-3. Choisis un capital de départ
-4. Achète, vends, ou programme des ordres
-
-## Avertissement
-
-Outil **éducatif uniquement**. Trading virtuel. Aucune garantie de gain. Les marchés crypto sont très volatils.
-
-## Licence
-
-Usage éducatif libre.
+## Important
+- Outil **éducatif** uniquement (argent virtuel)
+- Changer de navigateur ou vider les données du site = perte du portefeuille
+- Aucune garantie de gain
