@@ -4,101 +4,135 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Crypto Edu</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
 :root{--bg:#0b0e11;--surface:#14171c;--surface2:#1a1d24;--border:#2a2e37;--text:#f0f2f5;--muted:#8b93a7;--green:#0ecb81;--red:#f6465d;--accent:#f0b90b}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 .header{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
 .logo{font-weight:700;font-size:1.15rem;display:flex;align-items:center;gap:8px}.logo span{color:var(--accent)}
-.btn{padding:10px 16px;border-radius:10px;border:none;font-weight:600;font-size:.9rem;cursor:pointer}
-.btn-primary{background:var(--green);color:#000}.btn-danger{background:var(--red);color:#fff}
-.btn-ghost{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
+.btn{padding:10px 16px;border-radius:10px;border:none;font-weight:600;font-size:.9rem;cursor:pointer}.btn-primary{background:var(--green);color:#000}.btn-danger{background:var(--red);color:#fff}.btn-ghost{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
 .container{max-width:480px;margin:0 auto;padding:0 12px 80px}
-.auth-box{max-width:380px;margin:40px auto;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 24px}
-.auth-box h1{font-size:1.5rem;margin-bottom:6px;text-align:center}
-.auth-box p{color:var(--muted);text-align:center;margin-bottom:18px;font-size:.9rem}
-.auth-box input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:12px 14px;border-radius:10px;font-size:1rem;margin-bottom:12px}
-.auth-box .btn{width:100%;margin-top:4px}
-.mode-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
-.mode-btns button{padding:12px;border-radius:10px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-weight:600;cursor:pointer}
-.mode-btns button.active{background:var(--green);color:#000;border-color:var(--green)}
+.start-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
+.start-screen h1{font-size:1.7rem;margin:8px 0}.start-screen p{color:var(--muted);margin-bottom:28px;max-width:300px}
+.capital-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;max-width:300px}
+.capital-btn{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:18px;border-radius:14px;font-size:1.1rem;font-weight:600;cursor:pointer}
+.capital-btn:hover,.capital-btn.highlight{border-color:var(--accent);background:rgba(240,185,11,.1)}
 .balance-card{background:linear-gradient(145deg,#1a1d24,#14171c);border:1px solid var(--border);border-radius:16px;padding:22px 18px;margin:16px 0;text-align:center}
-.balance-label{color:var(--muted);font-size:.85rem}.balance-value{font-size:2rem;font-weight:700;margin:4px 0}
-.balance-pnl{font-size:.95rem;font-weight:500}.positive{color:var(--green)}.negative{color:var(--red)}
+.balance-label{color:var(--muted);font-size:.85rem}.balance-value{font-size:2rem;font-weight:700;margin:4px 0}.balance-pnl{font-size:.95rem;font-weight:500}.positive{color:var(--green)}.negative{color:var(--red)}
 .balance-sub{display:flex;justify-content:center;gap:28px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
 .balance-sub .label{font-size:.75rem;color:var(--muted)}.balance-sub .val{font-weight:600;font-size:.95rem}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}.actions .btn{padding:13px}
-.section-title{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:16px 0 10px;font-weight:600}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}.actions .btn{padding:13px}
+.section-title{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:18px 0 10px;font-weight:600}
 .asset-row{display:flex;align-items:center;padding:13px 12px;background:var(--surface);border-radius:12px;margin-bottom:6px;cursor:pointer}
 .asset-icon{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.72rem;margin-right:12px}
 .asset-info{flex:1}.asset-name{font-weight:600;font-size:.92rem}.asset-symbol{color:var(--muted);font-size:.78rem}
 .asset-right{text-align:right}.asset-price{font-weight:600;font-size:.92rem}.asset-change{font-size:.78rem;font-weight:500}
-.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:14px}
-.chart-container{height:220px;position:relative}
+.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:14px}.chart-container{height:240px;position:relative}
 .warning{background:rgba(246,70,93,.1);border:1px solid rgba(246,70,93,.25);color:#f8a0ab;padding:10px;border-radius:10px;font-size:.78rem;text-align:center;margin:12px 0}
 .status{text-align:center;font-size:.75rem;color:var(--muted);margin-top:8px}.hidden{display:none!important}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;align-items:flex-end;justify-content:center;z-index:100}
 .modal{background:var(--surface);border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:22px 18px 30px}
 .modal h3{margin-bottom:14px}.modal select,.modal input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:12px;border-radius:10px;font-size:1rem;margin-bottom:12px}
 .modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-#error-box{color:var(--red);font-size:.85rem;text-align:center;margin-top:10px;min-height:20px}
 </style>
 </head>
 <body>
-<!-- See full source on Netlify: https://cryptoedu-fr.netlify.app — full app deployed from local build -->
-<div id="auth-screen">
-  <div class="auth-box">
-    <div class="logo" style="justify-content:center;font-size:1.4rem;margin-bottom:8px"><span>◈</span> Crypto Edu</div>
-    <h1 id="auth-title">Connexion</h1>
-    <p>Compte + sauvegarde cloud de ton portefeuille</p>
-    <div class="mode-btns">
-      <button type="button" id="btn-login" class="active" onclick="setMode(false)">Connexion</button>
-      <button type="button" id="btn-register" onclick="setMode(true)">Créer un compte</button>
+<div id="start-screen" class="start-screen">
+  <div class="logo" style="font-size:1.5rem;margin-bottom:8px"><span>◈</span> Crypto Edu</div>
+  <h1>Choisis ton capital</h1>
+  <p>Simulateur éducatif avec prix réels. Aucun compte. Données dans ton navigateur.</p>
+  <div class="capital-grid">
+    <button class="capital-btn" onclick="start(50)">50 €</button>
+    <button class="capital-btn" onclick="start(100)">100 €</button>
+    <button class="capital-btn" onclick="start(250)">250 €</button>
+    <button class="capital-btn" onclick="start(500)">500 €</button>
+    <button class="capital-btn highlight" onclick="start(1000)">1000 €</button>
+    <button class="capital-btn" onclick="start(2500)">2500 €</button>
+    <button class="capital-btn" onclick="start(5000)" style="grid-column:span 2">5000 €</button>
+  </div>
+  <p style="margin-top:20px;font-size:.8rem;color:var(--muted)">Version GitHub Pages · localStorage</p>
+</div>
+<div id="app" class="hidden">
+  <div class="header"><div class="logo"><span>◈</span> Crypto Edu</div>
+    <button class="btn btn-ghost" onclick="resetAll()" style="padding:8px 12px;font-size:.8rem">Réinitialiser</button></div>
+  <div class="container">
+    <div class="balance-card">
+      <div class="balance-label">Valeur totale</div>
+      <div class="balance-value" id="total-value">—</div>
+      <div class="balance-pnl" id="pnl">—</div>
+      <div class="balance-sub"><div><div class="label">Cash</div><div class="val" id="cash-value">—</div></div>
+      <div><div class="label">Cryptos</div><div class="val" id="crypto-value">—</div></div></div>
     </div>
-    <div id="username-wrap" style="display:none">
-      <input type="text" id="auth-username" placeholder="Pseudo" autocomplete="username">
+    <div class="actions">
+      <button class="btn btn-primary" onclick="openTrade('buy')">Acheter</button>
+      <button class="btn btn-danger" onclick="openTrade('sell')">Vendre</button>
     </div>
-    <input type="email" id="auth-email" placeholder="Email" autocomplete="email">
-    <input type="password" id="auth-password" placeholder="Mot de passe (min. 6)" autocomplete="current-password">
-    <button class="btn btn-primary" id="auth-submit" onclick="doAuth()">Se connecter</button>
-    <p id="error-box"></p>
-    <p style="text-align:center;margin-top:16px;font-size:.8rem;color:var(--muted)">Site live: <a href="https://cryptoedu-fr.netlify.app" style="color:var(--accent)">cryptoedu-fr.netlify.app</a></p>
+    <div class="section-title">Marché</div>
+    <div id="assets-list"></div>
+    <div class="section-title">Courbe</div>
+    <div class="chart-card">
+      <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+        <select id="chart-select" onchange="loadChart()" style="flex:1;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 10px"></select>
+        <select id="chart-period" onchange="loadChart()" style="background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 10px">
+          <option value="1">1 jour</option><option value="7">7j</option><option value="30" selected>30j</option><option value="90">90j</option><option value="365">1 an</option><option value="max">Max</option>
+        </select>
+      </div>
+      <div class="chart-container"><canvas id="price-chart"></canvas></div>
+      <p class="status" id="chart-info"></p>
+    </div>
+    <div class="section-title">Ordres programmés (€)</div>
+    <div class="chart-card">
+      <select id="order-side" onchange="updateOrderLabels()" style="width:100%;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:8px">
+        <option value="buy">Achat (si prix ≤)</option><option value="sell">Vente (si prix ≥)</option>
+      </select>
+      <select id="order-coin" style="width:100%;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:8px"></select>
+      <label id="order-price-label" style="font-size:.8rem;color:var(--muted)">Prix cible (€)</label>
+      <input id="order-price" type="text" placeholder="Ex: 80000" style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:10px;border-radius:8px;margin:4px 0 8px">
+      <label id="order-amount-label" style="font-size:.8rem;color:var(--muted)">Montant (€)</label>
+      <input id="order-amount" type="text" placeholder="Ex: 100" style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:10px;border-radius:8px;margin:4px 0 8px">
+      <button class="btn btn-primary" id="order-submit-btn" style="width:100%;padding:12px;margin-bottom:8px" onclick="addOrder()">Programmer</button>
+      <p id="order-msg" style="font-size:.8rem;min-height:18px"></p>
+      <div id="orders-list"></div>
+    </div>
+    <div class="warning">Prix réels · argent virtuel · outil éducatif uniquement</div>
+    <p class="status" id="last-update"></p>
+  </div>
+</div>
+<div id="modal" class="modal-overlay hidden">
+  <div class="modal">
+    <h3 id="modal-title">Acheter</h3>
+    <select id="modal-coin"></select>
+    <input id="modal-amount" type="text" placeholder="Montant €">
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Annuler</button>
+      <button class="btn btn-primary" id="modal-confirm" onclick="confirmTrade()">Confirmer</button>
+    </div>
   </div>
 </div>
 <script>
-const SUPABASE_URL = 'https://hzvuivqdutgfeglivfro.supabase.co';
-const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh6dnVpdnFkdXRnZmVnbGl2ZnJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4NDQ1NDcsImV4cCI6MjEwMzQyMDU0N30._WZRPoXgutU2NPF9WrNR_g2BFur5a5PThfrhsgKYMsQ';
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
-function setMode(reg){
-  document.getElementById('auth-title').textContent=reg?'Créer un compte':'Connexion';
-  document.getElementById('auth-submit').textContent=reg?"S'inscrire":'Se connecter';
-  document.getElementById('username-wrap').style.display=reg?'block':'none';
-  document.getElementById('btn-login').classList.toggle('active',!reg);
-  document.getElementById('btn-register').classList.toggle('active',reg);
-  window._isRegister=reg;
-}
-async function doAuth(){
-  const email=document.getElementById('auth-email').value.trim();
-  const password=document.getElementById('auth-password').value;
-  const username=document.getElementById('auth-username').value.trim();
-  const err=document.getElementById('error-box');
-  err.textContent='';
-  try{
-    if(window._isRegister){
-      if(!username||username.length<3){err.textContent='Pseudo min. 3 caractères';return;}
-      const {error}=await sb.auth.signUp({email,password,options:{data:{username,display_name:username}}});
-      if(error) throw error;
-      err.style.color='var(--green)'; err.textContent='Compte créé. Connecte-toi.'; setMode(false);
-    } else {
-      const {error}=await sb.auth.signInWithPassword({email,password});
-      if(error) throw error;
-      window.location.href='https://cryptoedu-fr.netlify.app';
-    }
-  }catch(e){ err.style.color='var(--red)'; err.textContent=e.message||'Erreur'; }
-}
-sb.auth.getSession().then(({data})=>{ if(data.session) window.location.href='https://cryptoedu-fr.netlify.app'; });
+const COINS=[{id:'bitcoin',symbol:'BTC',name:'Bitcoin',color:'#f7931a'},{id:'ethereum',symbol:'ETH',name:'Ethereum',color:'#627eea'},{id:'solana',symbol:'SOL',name:'Solana',color:'#14f195'},{id:'ripple',symbol:'XRP',name:'XRP',color:'#23292f'},{id:'binancecoin',symbol:'BNB',name:'BNB',color:'#f3ba2f'},{id:'dogecoin',symbol:'DOGE',name:'Dogecoin',color:'#c2a633'},{id:'cardano',symbol:'ADA',name:'Cardano',color:'#0033ad'},{id:'chainlink',symbol:'LINK',name:'Chainlink',color:'#2a5ada'},{id:'avalanche-2',symbol:'AVAX',name:'Avalanche',color:'#e84142'},{id:'polkadot',symbol:'DOT',name:'Polkadot',color:'#e6007a'},{id:'matic-network',symbol:'MATIC',name:'Polygon',color:'#8247e5'},{id:'litecoin',symbol:'LTC',name:'Litecoin',color:'#bfbbbb'},{id:'uniswap',symbol:'UNI',name:'Uniswap',color:'#ff007a'},{id:'near',symbol:'NEAR',name:'NEAR',color:'#00c08b'},{id:'cosmos',symbol:'ATOM',name:'Cosmos',color:'#2e3148'}];
+let cash=0,startCapital=0,holdings={},prices={},pendingOrders=[],tradeMode='buy',chartInstance=null;
+function formatEuro(n){return(n||0).toLocaleString('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:2})}
+function formatPrice(n){if(n>=1000)return n.toLocaleString('fr-FR',{maximumFractionDigits:0});if(n>=1)return n.toLocaleString('fr-FR',{maximumFractionDigits:2});return n.toLocaleString('fr-FR',{maximumFractionDigits:6})}
+function saveState(){try{localStorage.setItem('cryptoEduState',JSON.stringify({cash,startCapital,holdings,pendingOrders}))}catch(e){}}
+function loadState(){try{const r=localStorage.getItem('cryptoEduState');if(!r)return false;const s=JSON.parse(r);cash=Number(s.cash)||0;startCapital=Number(s.startCapital)||0;holdings=s.holdings||{};pendingOrders=Array.isArray(s.pendingOrders)?s.pendingOrders:[];Object.keys(holdings).forEach(k=>holdings[k]=Number(holdings[k])||0);return startCapital>0}catch(e){return false}}
+function start(amount){startCapital=amount;cash=amount;holdings={};pendingOrders=[];COINS.forEach(c=>holdings[c.id]=0);saveState();document.getElementById('start-screen').classList.add('hidden');document.getElementById('app').classList.remove('hidden');initUI();refreshPrices()}
+function resetAll(){if(!confirm('Tout réinitialiser ?'))return;localStorage.removeItem('cryptoEduState');location.reload()}
+function portfolioValue(){return COINS.reduce((s,c)=>s+(holdings[c.id]||0)*(prices[c.id]?.price||0),0)}
+function updateUI(){const pv=portfolioValue(),total=cash+pv,pnl=total-startCapital,pct=startCapital?(pnl/startCapital)*100:0;document.getElementById('total-value').textContent=formatEuro(total);document.getElementById('cash-value').textContent=formatEuro(cash);document.getElementById('crypto-value').textContent=formatEuro(pv);const el=document.getElementById('pnl');el.textContent=(pnl>=0?'+':'')+formatEuro(pnl)+' ('+(pct>=0?'+':'')+pct.toFixed(1)+' %)';el.className='balance-pnl '+(pnl>=0?'positive':'negative');const list=document.getElementById('assets-list');list.innerHTML=COINS.map(c=>{const d=prices[c.id];const owned=holdings[c.id]||0;const ch=d?(d.change>=0?'positive':'negative'):'';const chT=d?((d.change>=0?'+':'')+d.change.toFixed(1)+' %'):'—';return `<div class="asset-row" onclick="selectChart('${c.id}')"><div class="asset-icon" style="background:${c.color}22;color:${c.color}">${c.symbol.slice(0,3)}</div><div class="asset-info"><div class="asset-name">${c.name}</div><div class="asset-symbol">${owned>0?owned.toFixed(6)+' · ':''}${c.symbol}</div></div><div class="asset-right"><div class="asset-price">${d?formatPrice(d.price)+' €':'—'}</div><div class="asset-change ${ch}">${chT}</div></div></div>`}).join('');renderOrders()}
+async function refreshPrices(){try{const ids=COINS.map(c=>c.id).join(',');const res=await fetch('https://api.coingecko.com/api/v3/simple/price?ids='+ids+'&vs_currencies=eur&include_24hr_change=true');if(!res.ok)throw new Error('api');const data=await res.json();COINS.forEach(c=>{if(data[c.id])prices[c.id]={price:data[c.id].eur,change:data[c.id].eur_24h_change||0}});document.getElementById('last-update').textContent='Maj '+new Date().toLocaleTimeString('fr-FR');checkOrders();updateUI()}catch(e){document.getElementById('last-update').textContent='Prix temporairement indisponibles'}}
+function initUI(){const cs=document.getElementById('chart-select');const oc=document.getElementById('order-coin');cs.innerHTML='';oc.innerHTML='';COINS.forEach(c=>{cs.innerHTML+=`<option value="${c.id}">${c.name}</option>`;oc.innerHTML+=`<option value="${c.id}">${c.name}</option>`});updateOrderLabels();loadChart()}
+function selectChart(id){document.getElementById('chart-select').value=id;loadChart()}
+function updateOrderLabels(){const side=document.getElementById('order-side').value;document.getElementById('order-price-label').textContent=side==='buy'?'J’achète quand le prix ≤ (€)':'Je vends quand le prix ≥ (€)';document.getElementById('order-amount-label').textContent=side==='buy'?'Montant à investir (€)':'Montant à vendre (€) — vide = tout';document.getElementById('order-submit-btn').textContent=side==='buy'?'Programmer cet achat':'Programmer cette vente';document.getElementById('order-submit-btn').className='btn '+(side==='buy'?'btn-primary':'btn-danger')}
+function renderOrders(){const list=document.getElementById('orders-list');if(!pendingOrders.length){list.innerHTML='<p style="color:var(--muted);font-size:.8rem">Aucun ordre</p>';return}list.innerHTML=pendingOrders.map((o,i)=>{const coin=COINS.find(c=>c.id===o.coinId);const amt=o.amount==='all'?'tout':formatEuro(o.amount);const label=o.side==='buy'?`Acheter ${coin?.symbol} ≤ ${formatPrice(o.targetPrice)} € (${amt})`:`Vendre ${coin?.symbol} ≥ ${formatPrice(o.targetPrice)} € (${amt})`;return `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)"><span>${label}</span><button class="btn btn-ghost" style="padding:4px 8px;font-size:.75rem" onclick="cancelOrder(${i})">Annuler</button></div>`}).join('')}
+function addOrder(){const coinId=document.getElementById('order-coin').value;const side=document.getElementById('order-side').value;const targetPrice=parseFloat(document.getElementById('order-price').value.replace(',','.'));const amountRaw=document.getElementById('order-amount').value.trim();const msg=document.getElementById('order-msg');if(!coinId||isNaN(targetPrice)||targetPrice<=0){msg.textContent='Indique le prix cible.';msg.style.color='var(--red)';return}if(side==='buy'){const amount=parseFloat(amountRaw.replace(',','.'));if(isNaN(amount)||amount<=0){msg.textContent='Montant en € requis.';msg.style.color='var(--red)';return}if(amount>cash){msg.textContent='Cash insuffisant.';msg.style.color='var(--red)';return}pendingOrders.push({coinId,side:'buy',targetPrice,amount})}else{const owned=Number(holdings[coinId])||0;if(owned<=0){msg.textContent='Tu ne possèdes pas cette crypto.';msg.style.color='var(--red)';return}let amount;if(amountRaw==='')amount='all';else{amount=parseFloat(amountRaw.replace(',','.'));if(isNaN(amount)||amount<=0){msg.textContent='Montant en € invalide.';msg.style.color='var(--red)';return}}pendingOrders.push({coinId,side:'sell',targetPrice,amount})}saveState();renderOrders();msg.style.color='var(--green)';msg.textContent='Ordre programmé.';document.getElementById('order-price').value='';document.getElementById('order-amount').value=''}
+function cancelOrder(i){pendingOrders.splice(i,1);saveState();renderOrders()}
+function checkOrders(){if(!pendingOrders.length)return;const remaining=[];pendingOrders.forEach(o=>{const p=prices[o.coinId]?.price;if(!p){remaining.push(o);return}if(o.side==='buy'&&p<=o.targetPrice&&o.amount<=cash){holdings[o.coinId]=(Number(holdings[o.coinId])||0)+o.amount/p;cash-=o.amount}else if(o.side==='sell'&&p>=o.targetPrice){const owned=Number(holdings[o.coinId])||0;if(owned<=0)return;const qty=o.amount==='all'?owned:Math.min(owned,Number(o.amount)/p);if(qty>0){cash+=qty*p;holdings[o.coinId]=owned-qty;if(holdings[o.coinId]<1e-12)holdings[o.coinId]=0}}else remaining.push(o)});pendingOrders=remaining;saveState()}
+function openTrade(mode){tradeMode=mode;document.getElementById('modal-title').textContent=mode==='buy'?'Acheter':'Vendre';document.getElementById('modal-confirm').className='btn '+(mode==='buy'?'btn-primary':'btn-danger');const sel=document.getElementById('modal-coin');sel.innerHTML='';let has=false;COINS.forEach(c=>{const owned=Number(holdings[c.id])||0;if(mode==='sell'&&owned<=0)return;has=true;const o=document.createElement('option');o.value=c.id;o.textContent=mode==='sell'?`${c.name} (${owned.toFixed(6)})`:`${c.name}`;sel.appendChild(o)});if(mode==='sell'&&!has){alert('Aucune crypto à vendre.');return}document.getElementById('modal-amount').value='';document.getElementById('modal-amount').placeholder=mode==='buy'?'Montant en €':'Quantité (vide = tout)';document.getElementById('modal').classList.remove('hidden')}
+function closeModal(){document.getElementById('modal').classList.add('hidden')}
+function confirmTrade(){const id=document.getElementById('modal-coin').value;const val=document.getElementById('modal-amount').value;const d=prices[id];if(!d){alert('Prix indisponible');return}if(tradeMode==='buy'){const amount=parseFloat(String(val).replace(',','.'));if(isNaN(amount)||amount<=0||amount>cash){alert('Montant invalide');return}holdings[id]=(Number(holdings[id])||0)+amount/d.price;cash-=amount}else{const owned=Number(holdings[id])||0;const qty=String(val).trim()===''?owned:parseFloat(String(val).replace(',','.'));if(isNaN(qty)||qty<=0||qty>owned){alert('Quantité invalide');return}cash+=qty*d.price;holdings[id]=owned-qty;if(holdings[id]<1e-12)holdings[id]=0}closeModal();saveState();updateUI()}
+async function loadChart(){const coinId=document.getElementById('chart-select').value;const period=document.getElementById('chart-period').value;const info=document.getElementById('chart-info');const ctx=document.getElementById('price-chart').getContext('2d');if(chartInstance){chartInstance.destroy();chartInstance=null}info.textContent='Chargement...';const fallbacks=period==='max'?['max','365','90','30','7','1']:[period,'1','7'];let data=null,used=period;for(const p of fallbacks){try{const cacheKey='chart_'+coinId+'_'+p;const cached=localStorage.getItem(cacheKey);if(cached){const {ts,data:d}=JSON.parse(cached);if(Date.now()-ts<2*60*60*1000){data=d;used=p;break}}const res=await fetch('https://api.coingecko.com/api/v3/coins/'+coinId+'/market_chart?vs_currency=eur&days='+p);if(!res.ok)throw new Error('x');const d=await res.json();if(!d.prices?.length)throw new Error('empty');try{localStorage.setItem(cacheKey,JSON.stringify({ts:Date.now(),data:d}))}catch(e){}data=d;used=p;break}catch(e){await new Promise(r=>setTimeout(r,500))}}if(!data){info.textContent='API saturée, réessaie plus tard.';return}const step=Math.max(1,Math.floor(data.prices.length/80));const sampled=data.prices.filter((_,i)=>i%step===0);const isIntraday=used==='1'||Number(used)===1;const isLong=used==='max'||Number(used)>=365;const labels=sampled.map(p=>{const d=new Date(p[0]);if(isIntraday)return d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});if(isLong)return d.toLocaleDateString('fr-FR',{month:'short',year:'2-digit'});return d.toLocaleDateString('fr-FR',{day:'2-digit',month:'short'})});const values=sampled.map(p=>p[1]);const first=data.prices[0][1],last=data.prices[data.prices.length-1][1];const ch=((last-first)/first*100).toFixed(1);chartInstance=new Chart(ctx,{type:'line',data:{labels,datasets:[{data:values,borderColor:'#0ecb81',backgroundColor:'rgba(14,203,129,.08)',borderWidth:2,pointRadius:0,tension:.25,fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{maxTicksLimit:8,color:'#8b93a7',font:{size:10}},grid:{display:false}},y:{ticks:{color:'#8b93a7',font:{size:10}},grid:{color:'#2a2e37'}}}}});info.textContent=(ch>=0?'+':'')+ch+' % ('+(isIntraday?'1 jour':used==='max'?'max':used+' j')+')'}
+document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});if(loadState()){document.getElementById('start-screen').classList.add('hidden');document.getElementById('app').classList.remove('hidden');initUI();refreshPrices()}else{COINS.forEach(c=>holdings[c.id]=0)}setInterval(refreshPrices,60000);
 </script>
 </body>
 </html>
