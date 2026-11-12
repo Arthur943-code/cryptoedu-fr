@@ -1,27 +1,22 @@
 # Crypto Edu
 
-Simulateur éducatif de trading crypto — **100 % statique**.
+Simulateur éducatif de trading crypto — **100 % statique** (GitHub Pages).
 
-## Stack
-- HTML / CSS / JS (un seul `index.html`)
+## Utilisation
+- Aucun compte, aucune base de données
+- Portefeuille sauvegardé dans le navigateur (`localStorage`)
 - Prix live : CoinGecko
-- Sauvegarde : **localStorage** (navigateur)
-- **Pas de Supabase**, pas de compte
 
 ## Fonctionnalités
-- Capital de départ 50 € → 5000 €
-- 15 cryptos, prix live
-- Achat / vente manuels
-- Ordres programmés (montants en **euros**)
+- Capital 50 € → 5000 €
+- 15 cryptomonnaies
+- Achat / vente + ordres programmés (montants en €)
 - Courbes : 1 jour, 7j, 30j, 90j, 1 an, depuis création
 - Stratégie éducative DCA + SMA 200
 
 ## GitHub Pages
-1. Dépose `index.html` à la racine de ce dépôt
-2. **Settings → Pages → Branch `main` → Save**
-3. URL : `https://Arthur943-code.github.io/cryptoedu-fr/`
+1. Settings → Pages → Branch **main** → folder **/ (root)** → Save
+2. URL : https://Arthur943-code.github.io/cryptoedu-fr/
 
-## Important
-- Outil **éducatif** uniquement (argent virtuel)
-- Changer de navigateur ou vider les données du site = perte du portefeuille
-- Aucune garantie de gain
+## Avertissement
+Outil éducatif uniquement. Trading virtuel. Pas un conseil en investissement.
