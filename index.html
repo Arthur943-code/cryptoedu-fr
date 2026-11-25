@@ -2,9 +2,12 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://api.coingecko.com; base-uri 'self'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Simulateur éducatif de trading crypto avec argent virtuel. Aucun compte, aucun conseil en investissement.">
 <title>Crypto Edu</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="vendor/chart.umd.js"></script>
 <style>
 :root{--bg:#0b0e11;--surface:#14171c;--surface2:#1a1d24;--border:#2a2e37;--text:#f0f2f5;--muted:#8b93a7;--green:#0ecb81;--red:#f6465d;--accent:#f0b90b}
 *{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
@@ -34,6 +37,9 @@
 .modal{background:var(--surface);border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:22px 18px 30px}
 .modal h3{margin-bottom:14px}.modal select,.modal input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:12px;border-radius:10px;font-size:1rem;margin-bottom:12px}
 .modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.legal-notice{font-size:.75rem;color:var(--muted);max-width:320px;margin:18px 0 0!important;line-height:1.5}
+.footer{text-align:center;font-size:.75rem;color:var(--muted);padding:6px 0 24px;line-height:1.7}
+.footer a,.legal-notice a{color:var(--muted);text-decoration:underline}
 </style>
 </head>
 <body>
@@ -50,7 +56,8 @@
     <button class="capital-btn" onclick="start(2500)">2500 €</button>
     <button class="capital-btn" onclick="start(5000)" style="grid-column:span 2">5000 €</button>
   </div>
-  <p style="margin-top:20px;font-size:.8rem;color:var(--muted)">Version GitHub Pages · localStorage</p>
+  <p class="legal-notice">Simulation avec argent virtuel : aucune opération réelle. Ce site ne donne aucun conseil en investissement. Les crypto-actifs sont très risqués et vous pouvez perdre tout votre capital. En choisissant un capital, vous reconnaissez avoir lu ces avertissements.</p>
+  <p class="legal-notice"><a href="mentions-legales.html">Mentions légales</a> · <a href="confidentialite.html">Confidentialité</a> · Prix : <a href="https://www.coingecko.com" rel="noopener noreferrer" target="_blank">CoinGecko</a></p>
 </div>
 <div id="app" class="hidden">
   <div class="header"><div class="logo"><span>◈</span> Crypto Edu</div>
@@ -94,8 +101,9 @@
       <p id="order-msg" style="font-size:.8rem;min-height:18px"></p>
       <div id="orders-list"></div>
     </div>
-    <div class="warning">Prix réels · argent virtuel · outil éducatif uniquement</div>
+    <div class="warning"><strong>Argent virtuel · outil éducatif uniquement.</strong> Ceci n'est pas un conseil en investissement. Les crypto-actifs sont très volatils : vous pouvez perdre la totalité de votre capital. Les performances simulées ne préjugent pas des performances réelles (frais, écarts de prix et fiscalité non pris en compte).</div>
     <p class="status" id="last-update"></p>
+    <div class="footer">Données de prix fournies par <a href="https://www.coingecko.com" rel="noopener noreferrer" target="_blank">CoinGecko</a>, sans garantie.<br><a href="mentions-legales.html">Mentions légales</a> · <a href="confidentialite.html">Politique de confidentialité</a></div>
   </div>
 </div>
 <div id="modal" class="modal-overlay hidden">
