@@ -21,7 +21,9 @@ Simulateur éducatif de trading crypto — **100 % statique** (GitHub Pages).
 ## Conformité légale (France)
 - `mentions-legales.html` : éditeur, hébergeur, avertissement sur les risques (LCEN)
 - `confidentialite.html` : RGPD, stockage local, services tiers
+- Hébergement : GitHub Pages uniquement (aucun Netlify)
 - Chart.js hébergé en local (`vendor/`) : aucun CDN tiers
+- CSP et referrer définis par balises `<meta>` (GitHub Pages n'accepte pas d'en-têtes personnalisés)
 - Seul appel externe : API CoinGecko (voir politique de confidentialité)
 - **À compléter** avant mise en ligne : nom/pseudo et e-mail de contact dans les deux pages légales (repérés `[À COMPLÉTER ...]`)
 
